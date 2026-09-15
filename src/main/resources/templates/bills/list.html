@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Bills')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <div class="page-header">
+        <h2><i class="bi bi-receipt"></i> Bills</h2>
+        <a th:href="@{/bills/new}" class="btn btn-rf-primary">
+            <i class="bi bi-plus-lg"></i> Add Bill
+        </a>
+    </div>
+
+    <!-- Filters -->
+    <div class="card mb-3">
+        <div class="card-body">
+            <form th:action="@{/bills}" method="get" class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Property</label>
+                    <select name="propertyId" class="form-select">
+                        <option value="">All Properties</option>
+                        <option th:each="p : ${properties}" th:value="${p.id}" th:text="${p.name}"
+                                th:selected="${selectedPropertyId != null && selectedPropertyId == p.id}"></option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Category</label>
+                    <select name="category" class="form-select">
+                        <option value="">All Categories</option>
+                        <option value="ELECTRICITY" th:selected="${selectedCategory == 'ELECTRICITY'}">Electricity</option>
+                        <option value="WATER" th:selected="${selectedCategory == 'WATER'}">Water</option>
+                        <option value="MAINTENANCE" th:selected="${selectedCategory == 'MAINTENANCE'}">Maintenance</option>
+                        <option value="OTHER" th:selected="${selectedCategory == 'OTHER'}">Other</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Status</label>
+                    <select name="status" class="form-select">
+                        <option value="">All Statuses</option>
+                        <option value="UNPAID" th:selected="${selectedStatus == 'UNPAID'}">Unpaid</option>
+                        <option value="PAID" th:selected="${selectedStatus == 'PAID'}">Paid</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-outline-primary">
+                        <i class="bi bi-funnel"></i> Filter
+                    </button>
+                    <a th:href="@{/bills}" class="btn btn-outline-secondary">Clear</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+            <div th:if="${#lists.isEmpty(bills)}" class="empty-state">
+                <i class="bi bi-receipt"></i>
+                <h5>No bills found</h5>
+                <p>Add your first bill or adjust the filters.</p>
+            </div>
+            <div th:unless="${#lists.isEmpty(bills)}" class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Property</th>
+                            <th>Tenant</th>
+                            <th>Amount</th>
+                            <th>Due Date</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="bill : ${bills}">
+                            <td th:text="${bill.title}"></td>
+                            <td><span class="badge bg-secondary" th:text="${bill.category}"></span></td>
+                            <td th:text="${bill.property.name}"></td>
+                            <td th:text="${bill.tenant != null ? bill.tenant.fullName : 'Property-level'}"></td>
+                            <td class="fw-bold" th:text="'₹' + ${#numbers.formatDecimal(bill.amount, 1, 0)}"></td>
+                            <td th:text="${#temporals.format(bill.dueDate, 'dd MMM yyyy')}"></td>
+                            <td>
+                                <span class="badge-status badge-paid" th:if="${bill.status == 'PAID'}">Paid</span>
+                                <span class="badge-status badge-unpaid" th:if="${bill.status == 'UNPAID'}">Unpaid</span>
+                            </td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a th:if="${bill.status == 'UNPAID'}" th:href="@{/bills/pay/{id}(id=${bill.id})}"
+                                       class="btn btn-outline-success" title="Mark Paid">
+                                        <i class="bi bi-check-lg"></i>
+                                    </a>
+                                    <a th:href="@{/bills/drop/{id}(id=${bill.id})}" class="btn btn-outline-warning" title="Drop (soft delete)"
+                                       onclick="return confirm('Drop this bill? It will be hidden but kept for history.')">
+                                        <i class="bi bi-archive"></i>
+                                    </a>
+                                    <a th:href="@{/bills/delete/{id}(id=${bill.id})}" class="btn btn-outline-danger" title="Hard Delete"
+                                       onclick="return confirm('PERMANENTLY delete this bill? This cannot be undone.')">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

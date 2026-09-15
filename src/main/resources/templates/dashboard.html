@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/layout :: head('Dashboard')}"></head>
+<body>
+<nav th:replace="~{fragments/layout :: nav}"></nav>
+
+<div class="container">
+    <div th:replace="~{fragments/layout :: flash-messages}"></div>
+
+    <h2 class="mb-4"><i class="bi bi-speedometer2"></i> Dashboard</h2>
+
+    <!-- Stats Row -->
+    <div class="row mb-4">
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card info">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-label">Expected This Month</div>
+                            <div class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalExpected, 1, 0)}">₹0</div>
+                        </div>
+                        <i class="bi bi-cash-coin stat-icon text-info"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card success">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-label">Collected</div>
+                            <div class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalCollected, 1, 0)}">₹0</div>
+                        </div>
+                        <i class="bi bi-check-circle stat-icon text-success"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card danger">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-label">Overdue</div>
+                            <div class="stat-value" th:text="'₹' + ${#numbers.formatDecimal(totalOverdue, 1, 0)}">₹0</div>
+                        </div>
+                        <i class="bi bi-exclamation-triangle stat-icon text-danger"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <div class="stat-label">Active Tenants</div>
+                            <div class="stat-value" th:text="${activeTenants}">0</div>
+                        </div>
+                        <i class="bi bi-people stat-icon text-primary"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Upcoming Bills -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-receipt"></i> Upcoming Bills (Next 7 Days)</h5>
+                    <a th:href="@{/bills}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(upcomingBills)}" class="empty-state">
+                        <i class="bi bi-check-circle"></i>
+                        <p>No upcoming bills in the next 7 days.</p>
+                    </div>
+                    <table th:unless="${#lists.isEmpty(upcomingBills)}" class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Amount</th>
+                                <th>Due</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="bill : ${upcomingBills}">
+                                <td th:text="${bill.title}"></td>
+                                <td th:text="'₹' + ${#numbers.formatDecimal(bill.amount, 1, 0)}"></td>
+                                <td th:text="${#temporals.format(bill.dueDate, 'dd MMM')}"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Latest Notifications -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header bg-white d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0"><i class="bi bi-bell"></i> Latest Notifications</h5>
+                    <a th:href="@{/notifications}" class="btn btn-sm btn-outline-primary">View All</a>
+                </div>
+                <div class="card-body">
+                    <div th:if="${#lists.isEmpty(latestNotifications)}" class="empty-state">
+                        <i class="bi bi-bell-slash"></i>
+                        <p>No notifications yet.</p>
+                    </div>
+                    <div th:unless="${#lists.isEmpty(latestNotifications)}">
+                        <div th:each="n : ${latestNotifications}" class="notification-item">
+                            <span class="badge bg-primary" th:if="${n.type == 'RENT_DUE_SOON'}">Rent Due</span>
+                            <span class="badge bg-danger" th:if="${n.type == 'RENT_OVERDUE'}">Overdue</span>
+                            <span class="badge bg-warning text-dark" th:if="${n.type == 'BILL_DUE'}">Bill Due</span>
+                            <p class="mb-0 mt-1 small" th:text="${n.message}"></p>
+                            <small class="text-muted" th:text="${#temporals.format(n.createdAt, 'dd MMM HH:mm')}"></small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer th:replace="~{fragments/layout :: footer}"></footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

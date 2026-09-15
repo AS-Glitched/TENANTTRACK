@@ -1,0 +1,157 @@
+:root {
+    --rf-primary: #4361ee;
+    --rf-primary-dark: #3a0ca3;
+    --rf-success: #06d6a0;
+    --rf-warning: #ffd166;
+    --rf-danger: #ef476f;
+    --rf-info: #118ab2;
+    --rf-dark: #1d1d2c;
+    --rf-light: #f8f9fa;
+    --rf-gradient: linear-gradient(135deg, var(--rf-primary), var(--rf-primary-dark));
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f2f5;
+    min-height: 100vh;
+}
+
+.navbar-dark {
+    background: var(--rf-gradient) !important;
+}
+
+.navbar-brand {
+    font-size: 1.4rem;
+    letter-spacing: 0.5px;
+}
+
+.card {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+}
+
+.stat-card {
+    border-left: 4px solid var(--rf-primary);
+    border-radius: 12px;
+}
+
+.stat-card.success { border-left-color: var(--rf-success); }
+.stat-card.warning { border-left-color: var(--rf-warning); }
+.stat-card.danger { border-left-color: var(--rf-danger); }
+.stat-card.info { border-left-color: var(--rf-info); }
+
+.stat-card .stat-icon {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.stat-card .stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--rf-dark);
+}
+
+.stat-card .stat-label {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #6c757d;
+}
+
+.badge-status {
+    font-size: 0.75rem;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: 600;
+}
+
+.badge-active { background-color: var(--rf-success); color: #fff; }
+.badge-past { background-color: #6c757d; color: #fff; }
+.badge-notice { background-color: var(--rf-warning); color: #333; }
+.badge-paid { background-color: var(--rf-success); color: #fff; }
+.badge-due { background-color: var(--rf-info); color: #fff; }
+.badge-partial { background-color: var(--rf-warning); color: #333; }
+.badge-overdue { background-color: var(--rf-danger); color: #fff; }
+.badge-unpaid { background-color: var(--rf-danger); color: #fff; }
+
+.table th {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #6c757d;
+    border-bottom-width: 1px;
+}
+
+.table td {
+    vertical-align: middle;
+}
+
+.btn-rf-primary {
+    background: var(--rf-gradient);
+    border: none;
+    color: white;
+    border-radius: 8px;
+    padding: 8px 20px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.btn-rf-primary:hover {
+    color: white;
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.page-header h2 {
+    margin: 0;
+    color: var(--rf-dark);
+    font-weight: 700;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+.notification-item {
+    border-left: 3px solid var(--rf-primary);
+    padding: 12px 16px;
+    margin-bottom: 8px;
+    background: white;
+    border-radius: 0 8px 8px 0;
+    transition: background 0.2s ease;
+}
+
+.notification-item.unread {
+    background: #eef2ff;
+    border-left-color: var(--rf-danger);
+}
+
+.notification-item:hover {
+    background: #f0f2f5;
+}
+
+.footer {
+    background: var(--rf-light) !important;
+}
